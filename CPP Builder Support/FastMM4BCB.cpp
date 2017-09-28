@@ -816,7 +816,7 @@ void * _RTLENTRY Cpp_Invalid_realloc_Stub(void *block, size_t size)
 //#pragma warn -8070 //"W8070 Function should return a value"
 #pragma option -w-rvl //the same as above
 
-__declspec(naked) void * _RTLENTRY Cpp_Invalid_malloc_Stub(size_t size)
+__declspec(naked) void * _RTLENTRY Cpp_Invalid_malloc_Stub(size_t /*size*/)
 {
   asm
   {
@@ -836,7 +836,7 @@ __declspec(naked) void * _RTLENTRY Cpp_Invalid_malloc_Stub(size_t size)
   }
 }
 
-__declspec(naked) void _RTLENTRY Cpp_Invalid_free_Stub(void *block)
+__declspec(naked) void _RTLENTRY Cpp_Invalid_free_Stub(void* /*block*/)
 {
   asm
   {
@@ -856,14 +856,14 @@ __declspec(naked) void _RTLENTRY Cpp_Invalid_free_Stub(void *block)
   }
 }
 
-__declspec(naked) void * _RTLENTRY Cpp_Invalid_realloc_Stub(void *block, size_t size)
+__declspec(naked) void * _RTLENTRY Cpp_Invalid_realloc_Stub(void* /*block*/, size_t /*size*/)
 {
   asm
   {
     mov  eax, [esp + 4] //block
     test eax, eax
     jnz  Invalid_realloc_Realloc
-  Invalid_realloc_Alloc:
+//  Invalid_realloc_Alloc:
     mov  eax, [esp + 8] //size
     test eax, eax
     jz   Invalid_realloc_Exit2 //Invalid_realloc_Exit1
@@ -882,7 +882,7 @@ __declspec(naked) void * _RTLENTRY Cpp_Invalid_realloc_Stub(void *block, size_t 
     test edx, edx
     jnz  Invalid_realloc_DoRealloc
     call InvalidFreeMemPtr
-  Invalid_realloc_ReturnNULL:
+//  Invalid_realloc_ReturnNULL:
     xor  eax, eax
   Invalid_realloc_Exit2:
     ret
@@ -1162,7 +1162,7 @@ bool __fastcall EnumModulesWin9x(EnumModuleCallback ACallback, void *AParam)
       {
         try
         {
-          MODULEENTRY32 ModuleInfo = {0};
+          MODULEENTRY32 ModuleInfo = {};
           ModuleInfo.dwSize = sizeof(ModuleInfo); 
 
           while (Module32First(hSnapshot, &ModuleInfo))
@@ -1305,7 +1305,7 @@ PIMAGE_SECTION_HEADER __fastcall GetImageFirstSection(PIMAGE_NT_HEADERS ntheader
 #define DefaultCodeSectionName _TEXT(".text")
 #define DefaultDataSectionName _TEXT(".data")
 
-bool __fastcall AddModuleCodeDataRange(HMODULE AModule, void *AParam)
+bool __fastcall AddModuleCodeDataRange(HMODULE AModule, void* /*AParam*/)
 {
   if ((FindResource(AModule, DVCLALResName, RT_RCDATA))
     /*&& (GetProcAddress(AModule, CPPdebugHookExport))*/)
@@ -1653,7 +1653,7 @@ char * __fastcall GetCppVirtualObjectTypeNameByTypeIdPtr(TypeDescriptorPtr Atpid
 #define CRTL_MEM_SIGNATURE_EXPORT "___CRTL_MEM_GetBorMemPtrs"
 #define CRTL_GET_HEAP_REDIRECTOR_INFO "__get_heap_redirector_info"
 
-bool __fastcall TryHookRTLHeapRedirector(HMODULE AModule, void *AParam)
+bool __fastcall TryHookRTLHeapRedirector(HMODULE AModule, void* /*AParam*/)
 {
   if ((FindResource(AModule, DVCLALResName, RT_RCDATA))
     /*&& (GetProcAddress(AModule, CPPdebugHookExport))*/
@@ -1837,7 +1837,9 @@ void BCBInstallFastMM()
     #else
     System::TMemoryManager AMemoryManager;
     #endif
+    #pragma warn -8111
     System::GetMemoryManager(AMemoryManager);
+    #pragma warn .8111
     StockGetMemPtr = AMemoryManager.GetMem;
     #endif
 
@@ -1987,7 +1989,9 @@ void BCBUninstallFastMM()
     #else
     System::TMemoryManager AMemoryManager;
     #endif
+    #pragma warn -8111
     System::GetMemoryManager(AMemoryManager);
+    #pragma warn .8111
 
     //MemoryManager uninstalled ?
     bool DelphiMMUninstalled = (AMemoryManager.GetMem != InternalGetMem);
