@@ -53,7 +53,7 @@ Change log:
 //#ifndef _NO_VCL
 
 #pragma option push
-#pragma option -k- -d -vi- -O2 -b- -3 -a8 -pc -RT- -x -xd -r -AT -vG- -vG0- -vG1- -vG2- -vG3- -vGc- -vGt- -vGd-
+#pragma option -k- -d -vi- -O2 -b- -3 -a8 -pc -RT+ -x -xd -r -AT -vG- -vG0- -vG1- -vG2- -vG3- -vGc- -vGt- -vGd-
 
 #pragma hdrstop
 #include "FastMM4Messages.hpp"
@@ -505,7 +505,7 @@ bool terminatePatched = false;
 //#ifndef _RTLDLL
 
 #if (__BORLANDC__ < 0x0560) || (__BORLANDC__ > 0x0711)
-#if defined(PURE_CPLUSPLUS) || defined(__clang__)
+#if defined(PURE_CPLUSPLUS) || defined(__clang__) || defined(TRUE)
 
 void * _RTLENTRY Cpp_malloc_Stub(size_t size)
 {
