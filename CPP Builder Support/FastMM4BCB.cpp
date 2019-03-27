@@ -1182,6 +1182,10 @@ bool __fastcall EnumModulesWin9x(EnumModuleCallback ACallback, void *AParam)
   return ret;
 }
 
+#if defined(__clang__)  // Específico para compilación C++11
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
 bool __fastcall EnumModules(EnumModuleCallback ACallback, void *AParam)
 {
   if (ACallback)
@@ -1968,6 +1972,11 @@ void BCBInstallFastMM()
   }
 //#endif  
 }
+
+#if defined(__clang__)  // Específico para compilación C++11
+  #pragma clang diagnostic ignored "-Wborland"
+#endif
+
 #pragma startup BCBInstallFastMM 0
 
 #ifdef PatchBCBTerminate
@@ -2060,7 +2069,9 @@ void BCBUninstallFastMM()
   }
 //#endif  
 }
+
 #pragma exit BCBUninstallFastMM 0
+
 
 #endif //PatchBCBTerminate
 
